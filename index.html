@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMRDA Challan (Resi)</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; }
+        input { display: block; width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin-top: 20px; font-weight: bold; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: gray; }
+        .link { color: blue; text-decoration: underline; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>P.M.R.D.A CHALLAN (R Zone)</h2>
+    <div id="form-container">
+        <input type="number" id="ReadyReckonerRate" placeholder="Ready Reckoner Rate">
+        <input type="number" id="ScLandRate" placeholder="Sc Land Rate">
+        <input type="number" id="ScBuUpRate" placeholder="Sc Bu Up Rate">
+        <input type="number" id="LandAreaNA" placeholder="Land Area (NA)">
+        <input type="number" id="LandArea" placeholder="Land Area">
+        <input type="number" id="BuUpArea" placeholder="Bu Up Area">
+        <input type="number" id="PaidBuUpArea" placeholder="Paid Bu Up Area">
+        <input type="number" id="ConstructionRate" placeholder="Construction Rate">
+    </div>
+    <button onclick="calculate()">Calculate</button>
+    <div class="result" id="result"></div>
+    <div class="footer">
+        <p>Created By - Akash Sambhaji Sawant<br>Mob-9096693391</p>
+        <p>
+            <a href="https://igreval.maharashtra.gov.in/eASR2.0/" target="_blank" class="link">
+                Know The Ready Reckoner Rate
+            </a>
+        </p>
+    </div>
+    <script>
+        function calculate() {
+            const form = {
+                ReadyReckonerRate: parseFloat(document.getElementById("ReadyReckonerRate").value) || 0,
+                ScLandRate: parseFloat(document.getElementById("ScLandRate").value) || 0,
+                ScBuUpRate: parseFloat(document.getElementById("ScBuUpRate").value) || 0,
+                LandAreaNA: parseFloat(document.getElementById("LandAreaNA").value) || 0,
+                LandArea: parseFloat(document.getElementById("LandArea").value) || 0,
+                BuUpArea: parseFloat(document.getElementById("BuUpArea").value) || 0,
+                PaidBuUpArea: parseFloat(document.getElementById("PaidBuUpArea").value) || 0,
+                ConstructionRate: parseFloat(document.getElementById("ConstructionRate").value) || 0,
+            };
+
+            const NaCharges = (form.ReadyReckonerRate * 0.15 * form.LandAreaNA).toFixed(2);
+            const ScCharges = (form.ScLandRate + (form.ScBuUpRate * form.BuUpArea)).toFixed(2);
+            const LandDevCharges = (form.ReadyReckonerRate * form.LandArea * 0.005).toFixed(2);
+            const BuUpDevCharges = (form.ReadyReckonerRate * form.BuUpArea * 0.02).toFixed(2);
+            const AdditionalDevCharges = (parseFloat(LandDevCharges) + parseFloat(BuUpDevCharges)).toFixed(2);
+            const PremiumCharges = (form.PaidBuUpArea * (form.ReadyReckonerRate * 0.60)).toFixed(2);
+            const LabourCharges = (form.ConstructionRate * (form.BuUpArea + form.PaidBuUpArea) * 0.01).toFixed(2);
+            const GrandTotal = (
+                parseFloat(NaCharges) +
+                parseFloat(ScCharges) +
+                parseFloat(LandDevCharges) +
+                parseFloat(BuUpDevCharges) +
+                parseFloat(AdditionalDevCharges) +
+                parseFloat(PremiumCharges) +
+                parseFloat(LabourCharges)
+            ).toFixed(2);
+
+            document.getElementById("result").innerHTML = `
+                <p>NA Charges: ${NaCharges}</p>
+                <p>SC Charges: ${ScCharges}</p>
+                <p>Land Dev Charges: ${LandDevCharges}</p>
+                <p>Bu Up Dev Charges: ${BuUpDevCharges}</p>
+                <p>Additional Dev Charges: ${AdditionalDevCharges}</p>
+                <p>Premium Charges: ${PremiumCharges}</p>
+                <p>Labour Charges: ${LabourCharges}</p>
+                <p><strong>Grand Total: ${GrandTotal}</strong></p>
+            `;
+        }
+    </script>
+</body>
+</html>
